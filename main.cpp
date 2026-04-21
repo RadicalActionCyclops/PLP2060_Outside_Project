@@ -94,7 +94,7 @@ int main()
         << "This program contains data on six edible fungi found throughout Florida.\n"
            "Before starting the quiz, select a fungus mentally.\n"
            "Then, answer each question with the option that best matches your selection.\n"
-           "(Consult the readme)" << endl;
+           "(Consult the readme for more information.)" << endl;
 
     do {
         resetScores(fungi, 6);
