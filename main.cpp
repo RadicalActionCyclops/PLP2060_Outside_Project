@@ -9,6 +9,7 @@
  * The highest-scoring fungus is deemed the result and is described in detail.
  */
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <iomanip>
@@ -84,10 +85,16 @@ int main()
         }
     };
 
-    int choice, border = 33;
+    int choice, border = 34;
     const int QUIZ = 1, LIST = 2, QUIT = 3;
     string errorMsg = "\nERROR: Invalid selection. "
         "Please type one of the following integers corresponding to an option:";
+
+    cout << "============ FUNGAL GUESSING GAME ============" << endl
+        << "This program contains data on six edible fungi found throughout Florida.\n"
+           "Before starting the quiz, select a fungus mentally.\n"
+           "Then, answer each question with the option that best matches your selection.\n"
+           "(Consult the readme)" << endl;
 
     do {
         resetScores(fungi, 6);
@@ -97,25 +104,52 @@ int main()
             << "\t3. Quit Program\n"
             << "Choose an option: ";
         cin >> choice;
-        cout << endl << setw(border) << setfill('=') << '\n';
+        cout << endl << setw(border) << setfill('=') << '\n' << endl;
 
         switch (choice) {
             case QUIZ:
                 // Take the quiz
                 runQuiz(fungi);
                 break;
-            case LIST:
+            case LIST: {
                 // List all fungi in the program
-                border = 33;
-                for (int f = 0; f < 6; f++) {
-                    cout << endl << setw(border) << setfill('=') << '\n';
-                    cout << "Common Name: " << fungi[f].commonName << endl;
-                    cout << "Scientific Name: " << fungi[f].scientificName << endl;
-                    cout << "Habitat: " << fungi[f].habitat << endl;
-                    cout << "Description: " << fungi[f].notes << endl;
-                    cout << setw(border) << setfill('=') << '\n' << endl;
-                }
+                bool invalid = false;
+                const int NAMES = 1, DETAILS = 2;
+                do {
+                    invalid = false;
+                    cout << "\nWhich would you like to display?" << endl
+                        << "\t1. Names only (useful for starting)" << endl
+                        << "\t2. Detailed descriptions (answer key)" << endl
+                        << "Option: ";
+                    int answer;
+                    cin >> answer;
+                    cout << endl;
+
+                    switch (answer) {
+                        case NAMES:
+                            for (int i=0; i<6; i++) {
+                                cout << i+1 << ". " << fungi[i].commonName << " ("
+                                    << fungi[i].scientificName << ')' << endl;
+                            }
+                            break;
+                        case DETAILS:
+                            border = 77;
+                            for (auto & f : fungi) {
+                                cout << endl << setw(border) << setfill('=') << '\n';
+                                cout << "Common Name: " << f.commonName << endl;
+                                cout << "Scientific Name: " << f.scientificName << endl;
+                                cout << "Habitat: " << f.habitat << endl;
+                                cout << "Description: " << f.notes << endl;
+                                cout << setw(border) << setfill('=') << '\n' << endl;
+                            }
+                            break;
+                        default:
+                            invalid = true;
+                            cout << errorMsg << endl << endl;
+                    }
+                } while (invalid);
                 break;
+            }
             case QUIT:
                 // Close the program
                 cout << "Goodbye." << endl;
